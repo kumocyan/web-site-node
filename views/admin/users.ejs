@@ -1,0 +1,71 @@
+<div class="row">
+  <!-- 新規アカウント追加フォーム -->
+  <div class="col-lg-4">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>新規アカウント追加</h5>
+      </div>
+      <div class="card-body">
+        <form action="/admin/users" method="POST">
+          <div class="mb-3">
+            <label for="username" class="form-label">ユーザー名</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">パスワード</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-plus me-2"></i>追加する
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- アカウント一覧 -->
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-users me-2"></i>アカウント一覧</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>ユーザー名</th>
+                <th>登録日時</th>
+                <th class="text-end">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.forEach(user => { %>
+                <tr>
+                  <td><%= user.id %></td>
+                  <td><%= user.username %></td>
+                  <td><%= new Date(user.created_at).toLocaleString('ja-JP') %></td>
+                  <td class="text-end">
+                    <% if (user.username !== 'nstyle2025') { %>
+                      <form action="/admin/users/<%= user.id %>?_method=DELETE" method="POST" onsubmit="return confirm('本当にこのユーザーを削除しますか？');">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </form>
+                    <% } else { %>
+                      <span class="text-muted">削除不可</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

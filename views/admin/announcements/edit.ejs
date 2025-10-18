@@ -1,0 +1,33 @@
+<div class="card shadow-sm mb-4">
+  <div class="card-header">
+    <h5 class="mb-0"><i class="fas fa-edit me-2"></i>お知らせ編集</h5>
+  </div>
+  <div class="card-body">
+    <form action="/admin/announcements/<%= announcement.id %>?_method=PUT" method="POST">
+      <div class="mb-3">
+        <label for="title" class="form-label">タイトル</label>
+        <input type="text" class="form-control" id="title" name="title" value="<%= announcement.title %>" required>
+      </div>
+      <div class="mb-3">
+        <label for="content" class="form-label">内容</label>
+        <textarea class="form-control" id="content" name="content" rows="5" required><%= announcement.content %></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="icon_class" class="form-label">アイコン</label>
+        <select class="form-select" id="icon_class" name="icon_class">
+          <option value="fas fa-info-circle" <%= announcement.icon_class === 'fas fa-info-circle' ? 'selected' : '' %>>情報 (info)</option>
+          <option value="fas fa-exclamation-triangle" <%= announcement.icon_class === 'fas fa-exclamation-triangle' ? 'selected' : '' %>>注意 (warning)</option>
+          <option value="fas fa-tools" <%= announcement.icon_class === 'fas fa-tools' ? 'selected' : '' %>>メンテナンス (tools)</option>
+          <option value="fas fa-car" <%= announcement.icon_class === 'fas fa-car' ? 'selected' : '' %>>車両 (car)</option>
+          <option value="fas fa-bell" <%= announcement.icon_class === 'fas fa-bell' ? 'selected' : '' %>>お知らせ (bell)</option>
+        </select>
+      </div>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a href="/admin/announcements" class="btn btn-secondary">キャンセル</a>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save me-2"></i>更新する
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

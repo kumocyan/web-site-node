@@ -1,0 +1,38 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <div class="mb-4">
+        <h1 class="display-1 text-danger">⚠️</h1>
+        <h2 class="mb-4">エラーが発生しました</h2>
+        <p class="lead mb-4">
+          申し訳ありません。現在システムに問題が発生しています。
+        </p>
+        <% if (typeof message !== 'undefined' && message) { %>
+          <div class="alert alert-warning mt-3">
+            <strong>詳細:</strong> <%= message %>
+          </div>
+        <% } %>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+          <a href="/" class="btn btn-primary btn-lg">トップページに戻る</a>
+          <button onclick="history.back()" class="btn btn-outline-secondary btn-lg">前のページに戻る</button>
+        </div>
+      </div>
+
+      <!-- サポート情報 -->
+      <div class="card mt-5">
+        <div class="card-header">
+          <h5 class="mb-0">お困りの場合は</h5>
+        </div>
+        <div class="card-body">
+          <p class="mb-2">このエラーが続く場合は、以下の連絡先までお問い合わせください。</p>
+          <div class="row text-center">
+            <div class="col-12">
+              <p class="mb-1"><strong>N-STYLE サポート</strong></p>
+              <p class="mb-0">📧 info@n-style.jp | 📞 011-123-4567</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

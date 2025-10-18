@@ -1,0 +1,139 @@
+<% 
+  var title = car.name + ' - 詳細情報';
+  var description = car.description;
+%>
+
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- 車両画像 -->
+      <div class="card mb-4">
+        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
+          <% if (car.image_path) { %>
+            <img src="<%= car.image_path %>" alt="<%= car.name %>" class="img-fluid" style="max-height: 380px; object-fit: contain;">
+          <% } else { %>
+            <div class="text-muted">画像準備中</div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- 車両詳細情報 -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3><%= car.name %></h3>
+          <p class="text-muted mb-0"><%= car.model || '' %></p>
+        </div>
+        <div class="card-body">
+          <% if (car.description) { %>
+            <p class="mb-4"><%= car.description %></p>
+          <% } %>
+
+          <!-- スペックテーブル -->
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <th width="30%">価格</th>
+                <td><strong class="text-danger fs-5"><%= car.price.toLocaleString() %>万円</strong>（税込）</td>
+              </tr>
+              <tr>
+                <th>年式</th>
+                <td><%= car.year %>年式</td>
+              </tr>
+              <tr>
+                <th>走行距離</th>
+                <td><%= car.mileage.toLocaleString() %>km</td>
+              </tr>
+              <tr>
+                <th>色</th>
+                <td><%= car.color %></td>
+              </tr>
+              <tr>
+                <th>燃料種類</th>
+                <td><%= car.fuel_type %></td>
+              </tr>
+              <tr>
+                <th>変速機</th>
+                <td><%= car.transmission %></td>
+              </tr>
+              <tr>
+                <th>在庫状況</th>
+                <td>
+                  <% if (car.status === 'available') { %>
+                    <span class="badge bg-success">在庫あり</span>
+                  <% } else if (car.status === 'reserved') { %>
+                    <span class="badge bg-warning">予約中</span>
+                  <% } else { %>
+                    <span class="badge bg-secondary">売約済み</span>
+                  <% } %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 特徴 -->
+          <% if (car.features && Array.isArray(car.features)) { %>
+            <h5 class="mt-4 mb-3">特徴・装備</h5>
+            <div class="row">
+              <% car.features.forEach(feature => { %>
+                <div class="col-md-6 col-lg-4 mb-2">
+                  <span class="badge bg-light text-dark p-2 w-100 text-start">✅ <%= feature %></span>
+                </div>
+              <% }); %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="sticky-top" style="top: 20px;">
+        <!-- お問い合わせカード -->
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">この車両について問い合わせる</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <strong>車両名:</strong><br>
+              <%= car.name %>
+            </div>
+            <div class="mb-3">
+              <strong>価格:</strong><br>
+              <span class="text-danger fs-5"><%= car.price.toLocaleString() %>万円</span>
+            </div>
+            <div class="mb-4">
+              <strong>在庫状況:</strong><br>
+              <% if (car.status === 'available') { %>
+                <span class="badge bg-success fs-6">在庫あり</span>
+              <% } else if (car.status === 'reserved') { %>
+                <span class="badge bg-warning fs-6">予約中</span>
+              <% } else { %>
+                <span class="badge bg-secondary fs-6">売約済み</span>
+              <% } %>
+            </div>
+
+            <a href="/contact" class="btn btn-primary w-100 mb-2">お問い合わせ</a>
+            <a href="/inventory" class="btn btn-outline-secondary w-100">在庫一覧に戻る</a>
+          </div>
+        </div>
+
+        <!-- 店舗情報 -->
+        <div class="card mt-4">
+          <div class="card-header">
+            <h6 class="mb-0">店舗情報</h6>
+          </div>
+          <div class="card-body">
+            <h6>N-STYLE <%= car.store_name ? `(${car.store_name})` : '' %></h6>
+            <p class="small text-muted mb-2">石狩市で創業20年</p>
+            <ul class="list-unstyled small">
+              <li>✅ 全車整備保証付き</li>
+              <li>✅ 充実のアフターサービス</li>
+              <li>✅ 各種ローン取り扱い</li>
+              <li>✅ 車検・点検もお任せください</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

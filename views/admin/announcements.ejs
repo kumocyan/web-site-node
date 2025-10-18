@@ -1,0 +1,90 @@
+<div class="row">
+  <!-- 新規お知らせ追加フォーム -->
+  <div class="col-lg-4">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>新規お知らせ追加</h5>
+      </div>
+      <div class="card-body">
+        <form action="/admin/announcements" method="POST">
+          <div class="mb-3">
+            <label for="title" class="form-label">タイトル</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label for="content" class="form-label">内容</label>
+            <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="icon_class" class="form-label">アイコン</label>
+            <select class="form-select" id="icon_class" name="icon_class">
+              <option value="fas fa-info-circle">情報 (info)</option>
+              <option value="fas fa-exclamation-triangle">注意 (warning)</option>
+              <option value="fas fa-tools">メンテナンス (tools)</option>
+              <option value="fas fa-car">車両 (car)</option>
+              <option value="fas fa-bell">お知らせ (bell)</option>
+            </select>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-plus me-2"></i>追加する
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- お知らせ一覧 -->
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-list me-2"></i>お知らせ一覧</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th class="text-center">アイコン</th>
+                <th>タイトル</th>
+                <th>内容</th>
+                <th>登録日時</th>
+                <th class="text-end">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (announcements && announcements.length > 0) { %>
+                <% announcements.forEach(announcement => { %>
+                  <tr>
+                    <td class="text-center"><i class="<%= announcement.icon_class %>"></i></td>
+                    <td class="fw-bold"><%= announcement.title %></td>
+                    <td><%= announcement.content.substring(0, 50) %><% if (announcement.content.length > 50) { %>...<% } %></td>
+                    <td><%= new Date(announcement.created_at).toLocaleString('ja-JP') %></td>
+                    <td class="text-end">
+                      <form id="delete-form-<%= announcement.id %>" action="/admin/announcements/<%= announcement.id %>?_method=DELETE" method="POST" onsubmit="return confirm('本当にこのお知らせを削除しますか？');" class="d-inline"></form>
+                      <div class="btn-group btn-group-sm action-buttons">
+                        <a href="/admin/announcements/<%= announcement.id %>/edit" class="btn btn-outline-secondary">
+                          <i class="fas fa-edit"></i> 編集
+                        </a>
+                        <button type="submit" form="delete-form-<%= announcement.id %>" class="btn btn-outline-danger">
+                          <i class="fas fa-trash-alt"></i> 削除
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" class="text-center text-muted py-4">
+                    お知らせはありません。
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

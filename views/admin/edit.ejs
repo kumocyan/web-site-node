@@ -1,0 +1,222 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-12">
+      <!-- パンくずリスト -->
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">ホーム</a></li>
+          <li class="breadcrumb-item"><a href="/admin">管理画面</a></li>
+          <li class="breadcrumb-item active" aria-current="page">車両編集</li>
+        </ol>
+      </nav>
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>車両編集</h1>
+        <a href="/admin" class="btn btn-outline-secondary">
+          <i class="fas fa-arrow-left me-2"></i>管理画面に戻る
+        </a>
+      </div>
+
+      <!-- 車両編集フォーム -->
+      <div class="card border-0 shadow-lg">
+        <div class="card-header bg-warning text-dark">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-edit me-2"></i>車両情報編集
+          </h4>
+        </div>
+        <div class="card-body p-4">
+          <form action="/admin/<%= car.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="row g-3">
+              <!-- 基本情報 -->
+              <div class="col-md-6">
+                <h5 class="mb-3 text-primary">
+                  <i class="fas fa-info-circle me-2"></i>基本情報
+                </h5>
+
+                <div class="mb-3">
+                  <label for="name" class="form-label fw-bold">
+                    <i class="fas fa-car me-2 text-primary"></i>車両名 <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control form-control-lg" id="name" name="name"
+                         value="<%= car.name %>" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="model" class="form-label fw-bold">
+                    <i class="fas fa-tag me-2 text-primary"></i>モデル
+                  </label>
+                  <input type="text" class="form-control" id="model" name="model"
+                         value="<%= car.model || '' %>">
+                </div>
+
+                <div class="mb-3">
+                  <label for="year" class="form-label fw-bold">
+                    <i class="fas fa-calendar me-2 text-primary"></i>年式 <span class="text-danger">*</span>
+                  </label>
+                  <input type="number" class="form-control" id="year" name="year"
+                         value="<%= car.year %>" required min="1950" max="2030">
+                </div>
+
+                <div class="mb-3">
+                  <label for="price" class="form-label fw-bold">
+                    <i class="fas fa-yen-sign me-2 text-success"></i>価格（万円） <span class="text-danger">*</span>
+                  </label>
+                  <input type="number" class="form-control" id="price" name="price"
+                         value="<%= car.price %>" required min="0">
+                </div>
+
+                <div class="mb-3">
+                  <label for="store_name" class="form-label fw-bold">
+                    <i class="fas fa-store me-2 text-primary"></i>店舗名 <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-select" id="store_name" name="store_name" required>
+                    <option value="">選択してください</option>
+                    <option value="本店" <%= car.store_name === '本店' ? 'selected' : '' %>>本店</option>
+                    <option value="支店" <%= car.store_name === '支店' ? 'selected' : '' %>>支店</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 詳細情報 -->
+              <div class="col-md-6">
+                <h5 class="mb-3 text-success">
+                  <i class="fas fa-cogs me-2"></i>詳細情報
+                </h5>
+
+                <div class="mb-3">
+                  <label for="mileage" class="form-label fw-bold">
+                    <i class="fas fa-tachometer-alt me-2 text-success"></i>走行距離（km）
+                  </label>
+                  <input type="number" class="form-control" id="mileage" name="mileage"
+                         value="<%= car.mileage %>">
+                </div>
+
+                <div class="mb-3">
+                  <label for="color" class="form-label fw-bold">
+                    <i class="fas fa-palette me-2 text-warning"></i>色
+                  </label>
+                  <input type="text" class="form-control" id="color" name="color"
+                         value="<%= car.color || '' %>">
+                </div>
+
+                <div class="mb-3">
+                  <label for="fuel_type" class="form-label fw-bold">
+                    <i class="fas fa-gas-pump me-2 text-danger"></i>燃料種別
+                  </label>
+                  <select class="form-select" id="fuel_type" name="fuel_type">
+                    <option value="">選択してください</option>
+                    <option value="ガソリン" <%= car.fuel_type === 'ガソリン' ? 'selected' : '' %>>ガソリン</option>
+                    <option value="ハイブリッド" <%= car.fuel_type === 'ハイブリッド' ? 'selected' : '' %>>ハイブリッド</option>
+                    <option value="電気" <%= car.fuel_type === '電気' ? 'selected' : '' %>>電気</option>
+                    <option value="ディーゼル" <%= car.fuel_type === 'ディーゼル' ? 'selected' : '' %>>ディーゼル</option>
+                    <option value="LPG" <%= car.fuel_type === 'LPG' ? 'selected' : '' %>>LPG</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="transmission" class="form-label fw-bold">
+                    <i class="fas fa-cog me-2 text-info"></i>変速機
+                  </label>
+                  <select class="form-select" id="transmission" name="transmission">
+                    <option value="">選択してください</option>
+                    <option value="AT" <%= car.transmission === 'AT' ? 'selected' : '' %>>AT（オートマチック）</option>
+                    <option value="MT" <%= car.transmission === 'MT' ? 'selected' : '' %>>MT（マニュアル）</option>
+                    <option value="CVT" <%= car.transmission === 'CVT' ? 'selected' : '' %>>CVT</option>
+                    <option value="DCT" <%= car.transmission === 'DCT' ? 'selected' : '' %>>DCT</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="status" class="form-label fw-bold">
+                    <i class="fas fa-info-circle me-2 text-secondary"></i>在庫状況 <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-select" id="status" name="status" required>
+                    <option value="available" <%= car.status === 'available' ? 'selected' : '' %>>在庫あり</option>
+                    <option value="reserved" <%= car.status === 'reserved' ? 'selected' : '' %>>予約中</option>
+                    <option value="sold" <%= car.status === 'sold' ? 'selected' : '' %>>売約済み</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 説明と特徴 -->
+            <div class="row mt-4">
+              <div class="col-12">
+                <h5 class="mb-3 text-info">
+                  <i class="fas fa-file-alt me-2"></i>説明と特徴
+                </h5>
+
+                <div class="mb-3">
+                  <label for="description" class="form-label fw-bold">
+                    <i class="fas fa-align-left me-2 text-info"></i>車両説明
+                  </label>
+                  <textarea class="form-control" id="description" name="description" rows="4"><%= car.description || '' %></textarea>
+                </div>
+
+                <div class="mb-3">
+                  <label for="features" class="form-label fw-bold">
+                    <i class="fas fa-list me-2 text-warning"></i>特徴（改行区切り）
+                  </label>
+                  <textarea class="form-control" id="features" name="features" rows="3"><%
+                    if (car.features) {
+                      const features = JSON.parse(car.features);
+                      if (Array.isArray(features)) {
+                        features.join('\n');
+                      }
+                    }
+                  %></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- 現在の画像 -->
+            <% if (car.image_path) { %>
+            <div class="row mt-4">
+              <div class="col-12">
+                <h5 class="mb-3 text-secondary">
+                  <i class="fas fa-image me-2"></i>現在の画像
+                </h5>
+                <div class="mb-3">
+                  <img src="<%= car.image_path %>" alt="<%= car.name %>" class="img-thumbnail" style="max-width: 200px;">
+                </div>
+              </div>
+            </div>
+            <% } %>
+
+            <!-- 画像アップロード -->
+            <div class="row mt-4">
+              <div class="col-12">
+                <h5 class="mb-3 text-danger">
+                  <i class="fas fa-image me-2"></i>画像変更（任意）
+                </h5>
+
+                <div class="mb-3">
+                  <label for="image" class="form-label fw-bold">
+                    <i class="fas fa-upload me-2 text-danger"></i>新しい画像ファイル
+                  </label>
+                  <input type="file" class="form-control" id="image" name="image"
+                         accept="image/*">
+                  <div class="form-text">
+                    新しい画像を選択すると、現在の画像が置き換わります。変更しない場合は空欄のままにしてください。
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 送信ボタン -->
+            <div class="row mt-4">
+              <div class="col-12 text-center">
+                <button type="submit" class="btn btn-warning btn-lg px-5 py-3 shadow">
+                  <i class="fas fa-save me-2"></i>変更を保存する
+                </button>
+                <a href="/admin" class="btn btn-outline-secondary btn-lg ms-3">
+                  <i class="fas fa-times me-2"></i>キャンセル
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
