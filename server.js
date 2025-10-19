@@ -244,11 +244,21 @@ app.use('/admin', (req, res, next) => {
 app.get('/', async (req, res) => {
   try {
     const announcements = await dbAll('SELECT * FROM announcements ORDER BY created_at DESC LIMIT 3');
+    let recentCars = await dbAll('SELECT * FROM cars WHERE status = "available" ORDER BY created_at DESC LIMIT 3');
+
+    // データ整形: mileage と price を数値として保証する
+    recentCars = recentCars.map(car => ({
+      ...car,
+      mileage: Number(car.mileage) || 0,
+      price: Number(car.price) || 0,
+    }));
+
     res.render('index', {
       title: 'N-STYLE - 中古車販売',
       description: '石狩市で創業20年、地域のお客様に寄り添った中古車販売サービスを提供',
       catchphrase: '安心・安全・最安値',
-      announcements: announcements
+      announcements: announcements,
+      cars: recentCars
     });
   } catch (error) {
     console.error('Database error:', error);
