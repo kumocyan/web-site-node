@@ -64,5 +64,11 @@
   .action-buttons .btn {
     text-align: center;
   }
+  
+  /* Override Bootstrap's table-responsive for small screens - Only for car list table with specific class */
+  .admin-car-list > .table.table-hover > thead > tr > th:not(:nth-child(1)):not(:nth-child(5)):not(:nth-child(8)),
+  .admin-car-list > .table.table-hover > tbody > tr > td:not(:nth-child(1)):not(:nth-child(5)):not(:nth-child(8)) {
+    display: none;
+  }
 }
 

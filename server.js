@@ -7,16 +7,22 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const ejs = require('ejs');
 const expressLayouts = require('express-ejs-layouts');
+const dotenv = require('dotenv');
+const fs = require('fs'); // Added for file deletion
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SESSION_SECRET = process.env.SESSION_SECRET || 'supersecretkey';
+const SESSION_COOKIE_SECURE = process.env.SESSION_COOKIE_SECURE === 'true';
 
 // セッション設定
 app.use(session({
-  secret: 'supersecretkey', // 任意の秘密鍵を設定
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // 本番環境ではtrueに設定
+  cookie: { secure: SESSION_COOKIE_SECURE }
 }));
 
 // SQLiteデータベース接続
@@ -74,6 +80,7 @@ function initDatabase() {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
+        password_plain TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
@@ -84,6 +91,13 @@ function initDatabase() {
         console.error('usersテーブル作成エラー:', err.message);
       } else {
         console.log('✅ usersテーブルが作成されました');
+        db.run("ALTER TABLE users ADD COLUMN password_plain TEXT", (alterErr) => {
+          if (alterErr && !alterErr.message.includes('duplicate column name')) {
+            console.error('password_plainカラム追加エラー:', alterErr.message);
+          } else if (!alterErr) {
+            console.log('✅ password_plainカラムが追加されました');
+          }
+        });
         seedUsers();
       }
     });
@@ -143,7 +157,7 @@ function seedUsers() {
       if (!row) {
         try {
           const hashedPassword = await bcrypt.hash(userData.password, 10);
-          db.run(`INSERT INTO users (username, password) VALUES (?, ?)`, [userData.username, hashedPassword], (insertErr) => {
+          db.run(`INSERT INTO users (username, password, password_plain) VALUES (?, ?, ?)`, [userData.username, hashedPassword, userData.password], (insertErr) => {
             if (insertErr) {
               console.error(`ユーザー作成エラー (${userData.username}):`, insertErr.message);
             } else {
@@ -186,6 +200,19 @@ function dbRun(sql, params = []) {
   });
 }
 
+function ensurePriceYen(car) {
+  if (!car) return car;
+  const raw = Number(car.price);
+  if (!Number.isFinite(raw)) {
+    car.price = 0;
+    return car;
+  }
+  // 既に円単位（10000以上）の場合はそのまま、万円の場合は変換
+  car.price = raw < 10000 ? raw * 10000 : raw;
+  car.price_man = car.price / 10000;
+  return car;
+}
+
 // ビューエンジン設定
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
@@ -195,7 +222,7 @@ app.set('views', path.join(__dirname, 'views'));
 // ファイルアップロード設定
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, 'assets', 'gallery'));
+    cb(null, path.join(__dirname, 'assets', 'car-stock'));
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -219,6 +246,8 @@ const upload = multer({
 
 // ミドルウェア
 app.use(express.static(path.join(__dirname, 'assets')));
+app.use('/media', express.static(path.join(__dirname, 'media')));
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
@@ -245,6 +274,7 @@ app.get('/', async (req, res) => {
   try {
     const announcements = await dbAll('SELECT * FROM announcements ORDER BY created_at DESC LIMIT 3');
     let recentCars = await dbAll('SELECT * FROM cars WHERE status = "available" ORDER BY created_at DESC LIMIT 3');
+    recentCars = recentCars.map(ensurePriceYen);
 
     // データ整形: mileage と price を数値として保証する
     recentCars = recentCars.map(car => ({
@@ -253,7 +283,7 @@ app.get('/', async (req, res) => {
       price: Number(car.price) || 0,
     }));
 
-    res.render('index', {
+    res.render('top', {
       title: 'N-STYLE - 中古車販売',
       description: '石狩市で創業20年、地域のお客様に寄り添った中古車販売サービスを提供',
       catchphrase: '安心・安全・最安値',
@@ -272,10 +302,11 @@ app.get('/', async (req, res) => {
 
 // 管理者ログインページ
 app.get('/admin/login', (req, res) => {
-  res.render('admin/login', { 
-    title: '管理者ログイン', 
+  res.render('admin/login', {
+    layout: 'admin/login-layout',
+    title: '管理者ログイン',
     description: 'N-STYLE 管理画面へのログインページです。',
-    message: req.session.message 
+    message: req.session.message
   });
   req.session.message = null; // メッセージをクリア
 });
@@ -317,7 +348,7 @@ app.get('/admin/logout', (req, res) => {
 // アカウント管理ページ表示
 app.get('/admin/users', isAuthenticated, async (req, res) => {
   try {
-    const users = await dbAll('SELECT id, username, created_at FROM users ORDER BY created_at DESC');
+    const users = await dbAll('SELECT id, username, created_at, password_plain FROM users ORDER BY created_at DESC');
     res.render('admin/users', {
       title: 'アカウント管理',
       description: 'ユーザーアカウントの追加・削除を行います',
@@ -348,7 +379,7 @@ app.post('/admin/users', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await dbRun('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
+    await dbRun('INSERT INTO users (username, password, password_plain) VALUES (?, ?, ?)', [username, hashedPassword, password]);
     res.redirect('/admin/users');
   } catch (error) {
     console.error('Database error:', error);
@@ -515,18 +546,24 @@ app.get('/inventory', async (req, res) => {
     const { price, fuel_type, transmission, mileage } = req.query;
 
     if (price) {
-      if (price === '100') {
+      if (price === '50') {
         whereClauses.push('price <= ?');
-        params.push(100);
+        params.push(50 * 10000); // 50万円
+      } else if (price === '100') {
+        whereClauses.push('price > ? AND price <= ?');
+        params.push(50 * 10000, 100 * 10000); // 50〜100万円
+      } else if (price === '150') {
+        whereClauses.push('price > ? AND price <= ?');
+        params.push(100 * 10000, 150 * 10000); // 100〜150万円
       } else if (price === '200') {
         whereClauses.push('price > ? AND price <= ?');
-        params.push(100, 200);
+        params.push(150 * 10000, 200 * 10000); // 150〜200万円
       } else if (price === '300') {
         whereClauses.push('price > ? AND price <= ?');
-        params.push(200, 300);
+        params.push(200 * 10000, 300 * 10000); // 200〜300万円
       } else if (price === '301') {
         whereClauses.push('price > ?');
-        params.push(300);
+        params.push(300 * 10000); // 300万円超
       }
     }
     if (fuel_type) {
@@ -549,7 +586,7 @@ app.get('/inventory', async (req, res) => {
 
     const cars = await dbAll(sql, params);
 
-    // featuresをJSONパース
+    // featuresをJSONパースと価格を表示用に変換
     cars.forEach(car => {
       if (car.features) {
         try {
@@ -560,6 +597,8 @@ app.get('/inventory', async (req, res) => {
       } else {
         car.features = [];
       }
+      // 価格を表示用に変換（万円単位）
+      car.price_man = (Number(car.price) || 0) / 10000;
     });
 
     res.render('inventory/index', {
@@ -581,7 +620,7 @@ app.get('/inventory', async (req, res) => {
 // 在庫詳細
 app.get('/inventory/:id', async (req, res) => {
   try {
-    const car = await dbGet('SELECT * FROM cars WHERE id = ? AND status = "available"', [req.params.id]);
+    const car = ensurePriceYen(await dbGet('SELECT * FROM cars WHERE id = ? AND status = "available"', [req.params.id]));
 
     if (!car) {
       return res.status(404).render('404', { 
@@ -643,7 +682,7 @@ app.get('/access', (req, res) => {
 // 管理画面 - 在庫管理
 app.get('/admin', isAuthenticated, async (req, res) => {
   try {
-    const cars = await dbAll('SELECT * FROM cars ORDER BY created_at DESC');
+    const cars = (await dbAll('SELECT * FROM cars ORDER BY created_at DESC')).map(ensurePriceYen);
 
     res.render('admin/index', {
       title: '在庫管理',
@@ -673,6 +712,9 @@ app.post('/admin', isAuthenticated, upload.single('image'), async (req, res) => 
   try {
     const { name, model, year, price, mileage, color, fuel_type, transmission, status, description, features, store_name } = req.body;
 
+    const priceMan = Number(price) || 0;
+    const priceYen = Math.round(priceMan * 10000);
+
     // 特徴をJSON形式に変換
     let featuresJson = null;
     if (features) {
@@ -683,7 +725,7 @@ app.post('/admin', isAuthenticated, upload.single('image'), async (req, res) => 
     // 画像パス設定
     let imagePath = null;
     if (req.file) {
-      imagePath = '/gallery/' + req.file.filename;
+      imagePath = '/assets/car-stock/' + req.file.filename;
     }
 
     const sql = `
@@ -691,7 +733,7 @@ app.post('/admin', isAuthenticated, upload.single('image'), async (req, res) => 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    await dbRun(sql, [name, model, year, price, mileage || 0, color, fuel_type, transmission, status || 'available', description, featuresJson, imagePath, store_name]);
+    await dbRun(sql, [name, model, year, priceYen, mileage || 0, color, fuel_type, transmission, status || 'available', description, featuresJson, imagePath, store_name]);
 
     res.redirect('/admin');
   } catch (error) {
@@ -707,7 +749,7 @@ app.post('/admin', isAuthenticated, upload.single('image'), async (req, res) => 
 // 車両編集フォーム表示
 app.get('/admin/:id/edit', isAuthenticated, async (req, res) => {
   try {
-    const car = await dbGet('SELECT * FROM cars WHERE id = ?', [req.params.id]);
+    const car = ensurePriceYen(await dbGet('SELECT * FROM cars WHERE id = ?', [req.params.id]));
 
     if (!car) {
       return res.status(404).render('404', { 
@@ -736,6 +778,9 @@ app.put('/admin/:id', isAuthenticated, upload.single('image'), async (req, res) 
   try {
     const { name, model, year, price, mileage, color, fuel_type, transmission, status, description, features, store_name } = req.body;
 
+    const priceMan = Number(price) || 0;
+    const priceYen = Math.round(priceMan * 10000);
+
     // 特徴をJSON形式に変換
     let featuresJson = null;
     if (features) {
@@ -744,7 +789,7 @@ app.put('/admin/:id', isAuthenticated, upload.single('image'), async (req, res) 
     }
 
     // 現在の車両情報を取得
-    const currentCar = await dbGet('SELECT * FROM cars WHERE id = ?', [req.params.id]);
+    const currentCar = ensurePriceYen(await dbGet('SELECT * FROM cars WHERE id = ?', [req.params.id]));
     if (!currentCar) {
       return res.status(404).render('404', { 
         title: '車両が見つかりません',
@@ -755,7 +800,11 @@ app.put('/admin/:id', isAuthenticated, upload.single('image'), async (req, res) 
     // 画像パス設定（新しい画像があれば更新）
     let imagePath = currentCar.image_path;
     if (req.file) {
-      imagePath = '/gallery/' + req.file.filename;
+      if (currentCar.image_path) {
+        const oldImagePath = path.join(__dirname, currentCar.image_path);
+        fs.unlink(oldImagePath, () => {});
+      }
+      imagePath = '/assets/car-stock/' + req.file.filename;
     }
 
     const sql = `
@@ -764,7 +813,7 @@ app.put('/admin/:id', isAuthenticated, upload.single('image'), async (req, res) 
       WHERE id = ?
     `;
 
-    await dbRun(sql, [name, model, year, price, mileage || 0, color, fuel_type, transmission, status, description, featuresJson, imagePath, store_name, req.params.id]);
+    await dbRun(sql, [name, model, year, priceYen, mileage || 0, color, fuel_type, transmission, status, description, featuresJson, imagePath, store_name, req.params.id]);
 
     res.redirect('/admin');
   } catch (error) {
@@ -780,7 +829,7 @@ app.put('/admin/:id', isAuthenticated, upload.single('image'), async (req, res) 
 // 車両データ削除
 app.delete('/admin/:id', isAuthenticated, async (req, res) => {
   try {
-    const car = await dbGet('SELECT * FROM cars WHERE id = ?', [req.params.id]);
+    const car = ensurePriceYen(await dbGet('SELECT * FROM cars WHERE id = ?', [req.params.id]));
 
     if (!car) {
       return res.status(404).render('404', { 

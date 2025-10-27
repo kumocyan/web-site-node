@@ -1,7 +1,6 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-12">
-      <!-- パンくずリスト -->
       <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">ホーム</a></li>
@@ -80,29 +79,29 @@
               </h5>
             </div>
             <div class="card-body p-0">
-              <div class="table-responsive">
+              <div class="table-responsive admin-car-list">
                 <table class="table table-hover mb-0">
                   <thead style="background-color: var(--nstyle-light);">
                     <tr>
                       <th class="py-3 ps-4 fw-bold text-muted">
                         <i class="fas fa-image me-2"></i>画像
                       </th>
-                      <th class="py-3 fw-bold text-muted">
+                      <th class="py-3 fw-bold text-muted d-none d-md-table-cell">
                         <i class="fas fa-car me-2"></i>車両名
                       </th>
-                      <th class="py-3 fw-bold text-muted">
+                      <th class="py-3 fw-bold text-muted d-none d-md-table-cell">
                         <i class="fas fa-calendar me-2"></i>年式
                       </th>
-                      <th class="py-3 fw-bold text-muted">
+                      <th class="py-3 fw-bold text-muted d-none d-md-table-cell">
                         <i class="fas fa-tachometer-alt me-2"></i>走行距離
                       </th>
                       <th class="py-3 fw-bold text-muted">
                         <i class="fas fa-yen-sign me-2"></i>価格
                       </th>
-                      <th class="py-3 fw-bold text-muted">
+                      <th class="py-3 fw-bold text-muted d-none d-md-table-cell">
                         <i class="fas fa-info-circle me-2"></i>在庫状況
                       </th>
-                      <th class="py-3 fw-bold text-muted">
+                      <th class="py-3 fw-bold text-muted d-none d-md-table-cell">
                         <i class="fas fa-clock me-2"></i>登録日
                       </th>
                       <th class="py-3 pe-4 fw-bold text-muted">
@@ -126,16 +125,16 @@
                               </div>
                             <% } %>
                           </td>
-                          <td class="py-3">
+                          <td class="py-3 d-none d-md-table-cell">
                             <strong class="text-dark"><%= car.name %></strong>
                             <% if (car.model) { %>
                               <br><small class="text-muted"><%= car.model %></small>
                             <% } %>
                           </td>
-                          <td class="py-3 fw-bold text-primary"><%= car.year %>年</td>
-                          <td class="py-3 fw-bold text-success"><%= car.mileage.toLocaleString() %>km</td>
-                          <td class="py-3 fw-bold text-danger"><%= car.price.toLocaleString() %>万</td>
-                          <td class="py-3">
+                          <td class="py-3 fw-bold text-primary d-none d-md-table-cell"><%= car.year %>年</td>
+                          <td class="py-3 fw-bold text-success d-none d-md-table-cell"><%= car.mileage.toLocaleString() %>km</td>
+                          <td class="py-3 fw-bold text-danger"><%= (Number(car.price) / 10000).toLocaleString('ja-JP', { minimumFractionDigits: 0, maximumFractionDigits: Number(car.price) % 10000 === 0 ? 0 : 1 }) %>万</td>
+                          <td class="py-3 d-none d-md-table-cell">
                             <% if (car.status === 'available') { %>
                               <span class="nstyle-badge">
                                 <i class="fas fa-check me-1"></i>在庫あり
@@ -150,22 +149,21 @@
                               </span>
                             <% } %>
                           </td>
-                          <td class="py-3 text-muted small">
+                          <td class="py-3 text-muted small d-none d-md-table-cell">
                             <%= new Date(car.created_at).toLocaleDateString('ja-JP') %>
                           </td>
                           <td class="py-3 pe-4">
-                            <div class="btn-group btn-group-sm">
+                            <form action="/admin/<%= car.id %>?_method=DELETE" method="POST" class="btn-group btn-group-sm" onsubmit="return confirm('本当に削除しますか？');" style="gap: 0.25rem;">
                               <a href="/inventory/<%= car.id %>" class="btn btn-outline-primary" target="_blank" title="詳細表示">
                                 <i class="fas fa-eye"></i>
                               </a>
                               <a href="/admin/<%= car.id %>/edit" class="btn btn-outline-secondary" title="編集">
                                 <i class="fas fa-edit"></i>
                               </a>
-                              <button class="btn btn-outline-danger" title="削除"
-                                      onclick="if(confirm('本当に削除しますか？')) { window.location.href='/admin/<%= car.id %>?_method=DELETE'; }">
+                              <button type="submit" class="btn btn-outline-danger" title="削除">
                                 <i class="fas fa-trash"></i>
                               </button>
-                            </div>
+                            </form>
                           </td>
                         </tr>
                       <% }); %>

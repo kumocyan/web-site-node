@@ -1,194 +1,106 @@
-<div class="container py-4">
-  <div class="row">
-    <div class="col-12">
-      <!-- パンくずリスト -->
-      <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="/">ホーム</a></li>
-          <li class="breadcrumb-item active" aria-current="page">在庫情報</li>
-        </ol>
-      </nav>
+<section class="section-block section-block--neutral">
+  <div class="section-block__inner reveal">
+    <div class="section-block__eyebrow">Inventory</div>
+    <h1 class="section-block__heading"><%= title %></h1>
+    <p class="section-block__description">価格帯や燃料種別で絞り込んで、安心・安全な一台を見つけてください。</p>
 
-      <h1 class="mb-4"><%= title %></h1>
-
-      <!-- 在庫台数表示 -->
-      <% if (cars && cars.length > 0) { %>
-        <div class="alert alert-info mb-4">
-          <strong><%= cars.length %>台</strong>の在庫車両が見つかりました
-        </div>
-      <% } %>
-
-      <!-- 検索・フィルター -->
-      <div class="card mb-4">
-        <div class="card-body">
-          <form action="/inventory" method="GET">
-            <div class="row g-3">
-              <div class="col-md-3">
-                <label for="price" class="form-label fw-bold">価格帯</label>
-                <select class="form-select" name="price" id="price">
-                  <option value="">指定なし</option>
-                  <option value="100" <%= locals.query && query.price === '100' ? 'selected' : '' %>>〜100万円</option>
-                  <option value="200" <%= locals.query && query.price === '200' ? 'selected' : '' %>>100〜200万円</option>
-                  <option value="300" <%= locals.query && query.price === '300' ? 'selected' : '' %>>200〜300万円</option>
-                  <option value="301" <%= locals.query && query.price === '301' ? 'selected' : '' %>>300万円〜</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label for="fuel_type" class="form-label fw-bold">燃料種別</label>
-                <select class="form-select" name="fuel_type" id="fuel_type">
-                  <option value="">指定なし</option>
-                  <option value="ガソリン" <%= locals.query && query.fuel_type === 'ガソリン' ? 'selected' : '' %>>ガソリン</option>
-                  <option value="ハイブリッド" <%= locals.query && query.fuel_type === 'ハイブリッド' ? 'selected' : '' %>>ハイブリッド</option>
-                  <option value="電気" <%= locals.query && query.fuel_type === '電気' ? 'selected' : '' %>>電気</option>
-                  <option value="ディーゼル" <%= locals.query && query.fuel_type === 'ディーゼル' ? 'selected' : '' %>>ディーゼル</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label for="transmission" class="form-label fw-bold">変速機</label>
-                <select class="form-select" name="transmission" id="transmission">
-                  <option value="">指定なし</option>
-                  <option value="AT" <%= locals.query && query.transmission === 'AT' ? 'selected' : '' %>>AT</option>
-                  <option value="MT" <%= locals.query && query.transmission === 'MT' ? 'selected' : '' %>>MT</option>
-                  <option value="CVT" <%= locals.query && query.transmission === 'CVT' ? 'selected' : '' %>>CVT</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label for="mileage" class="form-label fw-bold">走行距離</label>
-                <select class="form-select" name="mileage" id="mileage">
-                  <option value="">指定なし</option>
-                  <option value="1" <%= locals.query && query.mileage === '1' ? 'selected' : '' %>>1万km以内</option>
-                  <option value="3" <%= locals.query && query.mileage === '3' ? 'selected' : '' %>>3万km以内</option>
-                  <option value="5" <%= locals.query && query.mileage === '5' ? 'selected' : '' %>>5万km以内</option>
-                  <option value="10" <%= locals.query && query.mileage === '10' ? 'selected' : '' %>>10万km以内</option>
-                </select>
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-12 text-end">
-                <button type="submit" class="btn btn-primary px-4">
-                  <i class="fas fa-search me-2"></i>検索
-                </button>
-                <a href="/inventory" class="btn btn-outline-secondary ms-2">
-                  <i class="fas fa-undo me-2"></i>条件クリア
-                </a>
-              </div>
-            </div>
-          </form>
-        </div>
+    <form class="inventory-filters" action="/inventory" method="GET">
+      <div class="inventory-filters__grid">
+        <label class="inventory-filters__field">
+          <span>価格帯</span>
+          <select name="price">
+            <option value="">指定なし</option>
+            <option value="50" <%= locals.query && query.price === '50' ? 'selected' : '' %>>〜50万円</option>
+            <option value="100" <%= locals.query && query.price === '100' ? 'selected' : '' %>>50〜100万円</option>
+            <option value="150" <%= locals.query && query.price === '150' ? 'selected' : '' %>>100〜150万円</option>
+            <option value="200" <%= locals.query && query.price === '200' ? 'selected' : '' %>>150〜200万円</option>
+            <option value="300" <%= locals.query && query.price === '300' ? 'selected' : '' %>>200〜300万円</option>
+            <option value="301" <%= locals.query && query.price === '301' ? 'selected' : '' %>>300万円〜</option>
+          </select>
+        </label>
+        <label class="inventory-filters__field">
+          <span>燃料種別</span>
+          <select name="fuel_type">
+            <option value="">指定なし</option>
+            <option value="ガソリン" <%= locals.query && query.fuel_type === 'ガソリン' ? 'selected' : '' %>>ガソリン</option>
+            <option value="ハイブリッド" <%= locals.query && query.fuel_type === 'ハイブリッド' ? 'selected' : '' %>>ハイブリッド</option>
+            <option value="電気" <%= locals.query && query.fuel_type === '電気' ? 'selected' : '' %>>電気</option>
+            <option value="ディーゼル" <%= locals.query && query.fuel_type === 'ディーゼル' ? 'selected' : '' %>>ディーゼル</option>
+          </select>
+        </label>
+        <label class="inventory-filters__field">
+          <span>変速機</span>
+          <select name="transmission">
+            <option value="">指定なし</option>
+            <option value="AT" <%= locals.query && query.transmission === 'AT' ? 'selected' : '' %>>AT</option>
+            <option value="MT" <%= locals.query && query.transmission === 'MT' ? 'selected' : '' %>>MT</option>
+            <option value="CVT" <%= locals.query && query.transmission === 'CVT' ? 'selected' : '' %>>CVT</option>
+            <option value="DCT" <%= locals.query && query.transmission === 'DCT' ? 'selected' : '' %>>DCT</option>
+          </select>
+        </label>
+        <label class="inventory-filters__field">
+          <span>走行距離</span>
+          <select name="mileage">
+            <option value="">指定なし</option>
+            <option value="1" <%= locals.query && query.mileage === '1' ? 'selected' : '' %>>1万km以内</option>
+            <option value="3" <%= locals.query && query.mileage === '3' ? 'selected' : '' %>>3万km以内</option>
+            <option value="5" <%= locals.query && query.mileage === '5' ? 'selected' : '' %>>5万km以内</option>
+            <option value="10" <%= locals.query && query.mileage === '10' ? 'selected' : '' %>>10万km以内</option>
+          </select>
+        </label>
       </div>
+      <div class="inventory-filters__actions">
+        <button type="submit" class="button button--primary"><i class="fas fa-search"></i> 絞り込む</button>
+        <a href="/inventory" class="button button--outline">条件クリア</a>
+      </div>
+    </form>
 
-          <!-- 在庫一覧 -->
-          <div class="row g-4">
-            <% if (cars && cars.length > 0) { %>
-              <% cars.forEach(car => { %>
-                <div class="col-xl-4 col-lg-6 col-md-6">
-                  <div class="card h-100 border-0 shadow-lg animate-fade-in">
-                    <!-- 車両画像 -->
-                    <div class="position-relative overflow-hidden">
-                      <% if (car.image_path) { %>
-                        <img src="<%= car.image_path %>" class="card-img-top" alt="<%= car.name %>"
-                             style="height: 200px; object-fit: cover; transition: transform 0.3s;">
-                      <% } else { %>
-                        <div class="bg-light d-flex align-items-center justify-content-center"
-                             style="height: 200px;">
-                          <i class="fas fa-car fa-3x text-muted"></i>
-                        </div>
-                      <% } %>
+    <% if (cars && cars.length > 0) { %>
+      <p class="inventory-result-count" style="margin: 2rem 0 1rem 0; font-size: 1.05rem; color: var(--color-ink-300);">検索結果: <strong style="color: var(--color-ink-400);"><%= cars.length %></strong>台</p>
+    <% } else if (cars && cars.length === 0 && (query.price || query.fuel_type || query.transmission || query.mileage)) { %>
+      <div class="empty-state" style="margin: 3rem 0;">
+        <i class="fas fa-search fa-2x"></i>
+        <p style="margin-top: 1rem;">条件に合う車両が見つかりませんでした。<br>条件を変更してお探しください。</p>
+      </div>
+    <% } %>
 
-                      <!-- ステータスバッジ -->
-                      <div class="position-absolute top-0 end-0 m-3">
-                        <% if (car.status === 'available') { %>
-                          <span class="nstyle-badge">
-                            <i class="fas fa-check me-1"></i>在庫あり
-                          </span>
-                        <% } else if (car.status === 'reserved') { %>
-                          <span class="badge bg-warning">
-                            <i class="fas fa-clock me-1"></i>予約中
-                          </span>
-                        <% } else { %>
-                          <span class="badge bg-secondary">
-                            <i class="fas fa-times me-1"></i>売約済み
-                          </span>
-                        <% } %>
-                      </div>
-                    </div>
-
-                    <div class="card-body">
-                      <!-- 車両基本情報 -->
-                      <h6 class="card-title fw-bold mb-2"><%= car.name %></h6>
-                      <p class="text-muted small mb-3"><%= car.model || '' %></p>
-
-                      <!-- スペック情報 -->
-                      <div class="row text-center mb-3">
-                        <div class="col-4">
-                          <div class="text-primary fw-bold fs-5"><%= car.year %>年</div>
-                          <small class="text-muted">年式</small>
-                        </div>
-                        <div class="col-4">
-                          <div class="text-success fw-bold fs-5"><%= car.mileage.toLocaleString() %>km</div>
-                          <small class="text-muted">走行距離</small>
-                        </div>
-                        <div class="col-4">
-                          <div class="text-danger fw-bold fs-5"><%= car.price.toLocaleString() %>万</div>
-                          <small class="text-muted">価格(税込)</small>
-                        </div>
-                      </div>
-
-                      <!-- 特徴情報 -->
-                      <div class="mb-3">
-                        <small class="text-muted d-flex flex-wrap gap-1">
-                          <span class="badge bg-light text-dark"><%= car.color %></span>
-                          <span class="badge bg-light text-dark"><%= car.fuel_type %></span>
-                          <span class="badge bg-light text-dark"><%= car.transmission %></span>
-                        </small>
-                      </div>
-
-                      <!-- アクションボタン -->
-                      <a href="/inventory/<%= car.id %>" class="btn btn-primary w-100">
-                        <i class="fas fa-eye me-2"></i>詳細を見る
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              <% }); %>
-            <% } else { %>
-              <div class="col-12">
-                <div class="text-center py-5 animate-fade-in">
-                  <div class="card border-0 shadow-lg">
-                    <div class="card-body py-5">
-                      <div class="mb-4">
-                        <i class="fas fa-car fa-5x text-muted opacity-50"></i>
-                      </div>
-                      <h4 class="text-muted mb-3">只今、在庫準備中です</h4>
-                      <p class="text-muted mb-4">近日中に新しい車両が入荷予定です。お問い合わせください。</p>
-                      <a href="/contact" class="btn btn-primary btn-lg px-4">
-                        <i class="fas fa-envelope me-2"></i>お問い合わせ
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <% } %>
-          </div>
-
-      <!-- ページング（将来的に実装） -->
+    <div class="inventory-grid">
       <% if (cars && cars.length > 0) { %>
-        <div class="text-center mt-4">
-          <nav aria-label="ページナビゲーション">
-            <ul class="pagination justify-content-center">
-              <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1">前へ</a>
-              </li>
-              <li class="page-item active">
-                <a class="page-link" href="#">1</a>
-              </li>
-              <li class="page-item disabled">
-                <a class="page-link" href="#">次へ</a>
-              </li>
-            </ul>
-          </nav>
+        <% cars.forEach(car => {
+             const priceMan = Math.round((Number(car.price) || 0) / 10000);
+        %>
+          <article class="inventory-card">
+            <div class="inventory-card__image">
+              <% if (car.image_path) { %>
+                <img src="<%= car.image_path.startsWith('/assets/') ? car.image_path : '/assets/car-stock/' + car.image_path %>" alt="<%= car.name %>">
+              <% } else { %>
+                <div class="inventory-card__placeholder"><i class="fas fa-camera"></i></div>
+              <% } %>
+              <span class="inventory-card__badge"><%= car.status === 'available' ? 'Available' : car.status === 'reserved' ? 'Reserved' : 'Sold' %></span>
+            </div>
+            <div class="inventory-card__body">
+              <h2 class="inventory-card__title"><%= car.name %></h2>
+              <p class="inventory-card__subtitle"><%= car.model || '' %></p>
+              <div class="inventory-card__meta">
+                <span><i class="fas fa-calendar"></i><%= car.year %>年式</span>
+                <span><i class="fas fa-tachometer-alt"></i><%= (car.mileage / 1000).toFixed(1) %>千km</span>
+                <span><i class="fas fa-yen-sign"></i><%= priceMan.toLocaleString('ja-JP') %>万円</span>
+              </div>
+              <div class="inventory-card__tags">
+                <span><%= car.color %></span>
+                <span><%= car.fuel_type %></span>
+                <span><%= car.transmission %></span>
+              </div>
+              <a class="inventory-card__cta" href="/inventory/<%= car.id %>">詳細を見る <i class="fas fa-arrow-right"></i></a>
+            </div>
+          </article>
+        <% }) %>
+      <% } else if (!query.price && !query.fuel_type && !query.transmission && !query.mileage) { %>
+        <div class="empty-state">
+          <i class="fas fa-hourglass-half fa-2x"></i>
+          <p>現在、新着車両は準備中です。</p>
         </div>
       <% } %>
     </div>
   </div>
-</div>
+</section>

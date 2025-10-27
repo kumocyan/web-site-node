@@ -1,0 +1,206 @@
+<!-- HERO -->
+<section class="hero-block">
+  <video class="hero-block__video" autoplay muted loop playsinline poster="/assets/gallery/showroom.jpg">
+    <source src="/media/promo-sample.mp4" type="video/mp4">
+  </video>
+  <div class="hero-block__placeholder js-hero-placeholder">※動画差し込み※</div>
+  <div class="hero-block__content hero-block__content--minimal"></div>
+  <aside class="hero-block__partners">
+    <span class="hero-block__partners-label">協賛</span>
+    <a href="#" class="hero-block__partners-link">協賛会社1</a>
+    <a href="#" class="hero-block__partners-link">協賛会社2</a>
+    <a href="#" class="hero-block__partners-link">協賛会社3</a>
+  </aside>
+</section>
+
+<!-- STORY -->
+<section class="section-block section-block--neutral" id="story">
+  <div class="section-block__inner reveal">
+    <div class="section-block__eyebrow">ショップコンセプト</div>
+    <h2 class="section-block__heading">安心・安全・地域最安値<br>で選ばれるN-STYLE</h2>
+    <p class="section-block__description">
+      石狩で20年以上、仕入れから整備・保証・販売まで自社一貫で取り組んできました。
+      初めての車選びから乗り換えまで、お客様の暮らしに寄り添う一台をご提案します。
+    </p>
+  </div>
+</section>
+
+<section class="section-block section-block--frosted">
+  <div class="section-block__inner dual-column">
+    <div class="dual-column__visual reveal">
+      <img src="/assets/gallery/ショールーム.jpg" alt="N-STYLE ショールーム" loading="lazy">
+    </div>
+    <div class="story-list reveal">
+      <article class="story-list__item">
+        <span class="story-list__tag"><i class="fas fa-tools"></i> Maintenance</span>
+        <h3 class="story-list__title">国家整備士による徹底整備</h3>
+        <p class="story-list__body">入庫時の点検から納車前の仕上げまで自社整備工場で完結。エンジン・足回り・電装を細部まで整備し、安心して乗り出せる状態でお渡しします。</p>
+      </article>
+      <article class="story-list__item">
+        <span class="story-list__tag"><i class="fas fa-hand-holding-heart"></i> Support</span>
+        <h3 class="story-list__title">購入後も続く安心サポート</h3>
+        <p class="story-list__body">保証プランや定期点検、24時間対応のレスキューなど、万一のトラブルにも迅速に対応。ずっと頼れるカーショップを目指しています。</p>
+      </article>
+      <article class="story-list__item">
+        <span class="story-list__tag"><i class="fas fa-yen-sign"></i> Price</span>
+        <h3 class="story-list__title">地域最安値への挑戦</h3>
+        <p class="story-list__body">仕入れから販売までを自社で管理しコストを徹底的に見直し。諸費用までクリアにした総額表示で、納得の価格をご提案します。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE PILLARS -->
+<section class="section-block section-block--neutral" id="experience">
+  <div class="section-block__inner reveal">
+    <div class="section-block__eyebrow">安心サポート</div>
+    <h2 class="section-block__heading">3つの安心サポート体制</h2>
+    <div class="feature-grid">
+      <article class="feature-card">
+        <div class="feature-card__icon"><i class="fas fa-shield-alt"></i></div>
+        <h3 class="feature-card__title">徹底した品質管理</h3>
+        <p class="feature-card__text">入庫査定では修復歴や走行距離、整備履歴までをチェック。必要な交換・整備を行い、第三者機関の鑑定書もご用意します。</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-card__icon"><i class="fas fa-tools"></i></div>
+        <h3 class="feature-card__title">自社整備工場</h3>
+        <p class="feature-card__text">国家資格整備士が常駐。納車前整備から車検、カスタムまでワンストップで対応し、日々のメンテナンスもお任せください。</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-card__icon"><i class="fas fa-handshake-angle"></i></div>
+        <h3 class="feature-card__title">安心のアフターケア</h3>
+        <p class="feature-card__text">保証プラン、延長保証、ロードサービスなどを完備。ご購入後のライフプランに合わせた最適なサポートをご提案します。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- INVENTORY -->
+<section class="section-block section-block--frosted" id="inventory">
+  <div class="section-block__inner reveal">
+    <div class="section-block__eyebrow">在庫情報</div>
+    <div class="section-heading d-grid gap-3">
+      <h2 class="section-block__heading">新着中古車両</h2>
+      <p class="section-block__description">走行距離・整備履歴を開示し、保証付きでご案内。N-STYLEならではの仕入れルートで厳選した最新入荷車をチェックしてください。</p>
+    </div>
+    <div class="inventory-rail">
+      <div class="inventory-rail__track">
+        <% if (cars && cars.length > 0) { %>
+          <% cars.forEach((car) => {
+             const priceMan = Math.round((Number(car.price) || 0) / 10000);
+        %>
+            <article class="inventory-card">
+              <div class="inventory-card__image">
+                <% if (car.image_path) { %>
+                  <img src="<%= car.image_path.startsWith('/assets/') ? car.image_path : '/assets/car-stock/' + car.image_path %>" alt="<%= car.name %>">
+                <% } else { %>
+                  <div class="inventory-card__placeholder"><i class="fas fa-camera"></i></div>
+                <% } %>
+                <span class="inventory-card__badge">New</span>
+              </div>
+              <div class="inventory-card__body">
+                <div class="inventory-card__meta">
+                  <span><i class="fas fa-calendar"></i><%= car.year %>年式</span>
+                  <span><i class="fas fa-tachometer-alt"></i><%= (car.mileage / 10000).toFixed(1) %>万km</span>
+                  <span><i class="fas fa-yen-sign"></i><%= priceMan.toLocaleString('ja-JP') %>万円</span>
+                </div>
+                <h3 class="inventory-card__title"><%= car.name %></h3>
+                <p class="inventory-card__subtitle"><%= car.model %></p>
+                <a class="inventory-card__cta" href="/inventory/<%= car.id %>">詳細を見る <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </article>
+          <% }) %>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-hourglass-half fa-2x"></i>
+            <p>現在、新着車両は準備中です。</p>
+          </div>
+        <% } %>
+      </div>
+      <div class="text-end">
+        <a href="/inventory" class="inventory-card__cta">在庫一覧を見る <i class="fas fa-long-arrow-alt-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANNOUNCEMENTS -->
+<section class="section-block section-block--neutral" id="news">
+  <div class="section-block__inner">
+    <div class="section-block__eyebrow">最新情報</div>
+    <h2 class="section-block__heading reveal">お知らせ</h2>
+    <p class="section-block__description reveal">協賛キャンペーンのアップデートやN-STYLEからのニュースをタイムラインでお届けします。</p>
+    <div class="timeline" id="announcements-timeline">
+      <% if (announcements && announcements.length > 0) { %>
+        <% announcements.forEach((announcement, index) => { %>
+          <article class="timeline-card reveal" style="transition-delay: <%= index * 0.08 %>s;">
+            <h3 class="timeline-card__title"><%= announcement.title %></h3>
+            <p class="timeline-card__body"><%= announcement.content %></p>
+            <div class="timeline-card__meta"><i class="fas fa-calendar me-2"></i><%= new Date(announcement.created_at).toLocaleDateString('ja-JP') %></div>
+          </article>
+        <% }) %>
+      <% } else { %>
+        <div class="empty-state">
+          <i class="fas fa-bell-slash fa-2x"></i>
+          <p>現在、お知らせはありません。</p>
+        </div>
+      <% } %>
+    </div>
+    <div class="load-more" id="load-more-container">
+      <button class="button button--outline" id="load-more-btn"><i class="fas fa-history"></i> 過去のお知らせを見る</button>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="section-block section-block--frosted" id="partners">
+  <div class="section-block__inner reveal">
+    <div class="section-block__eyebrow">協賛企業</div>
+    <h2 class="section-block__heading">協賛社一覧</h2>
+    <p class="section-block__description">地域の皆さまに支えられてきたN-STYLEは、多くの企業様からご協賛いただいています。五十音順で掲載しています。</p>
+
+    <div class="sponsor-grid">
+      <a class="sponsor" href="#" target="_blank" rel="noopener">
+        <div class="sponsor__logo">
+          <img src="/assets/gallery/sponsors/asfeel.jpg" alt="アスフィール株式会社">
+        </div>
+        <span class="sponsor__name">アスフィール株式会社</span>
+      </a>
+
+      <a class="sponsor" href="#" target="_blank" rel="noopener">
+        <div class="sponsor__logo">
+          <img src="/assets/gallery/sponsors/mgkikaku.png" alt="学校公演のMG企画">
+        </div>
+        <span class="sponsor__name">学校公演のMG企画</span>
+      </a>
+
+      <a class="sponsor" href="#" target="_blank" rel="noopener">
+        <div class="sponsor__logo">
+          <img src="/assets/gallery/sponsors/kanko.png" alt="大阪菅公学生服株式会社">
+        </div>
+        <span class="sponsor__name">大阪菅公学生服株式会社</span>
+      </a>
+
+      <a class="sponsor" href="#" target="_blank" rel="noopener">
+        <div class="sponsor__logo">
+          <img src="/assets/gallery/sponsors/otsuka-wellness.jpg" alt="大塚ウエルネスベンディング株式会社">
+        </div>
+        <span class="sponsor__name">大塚ウエルネスベンディング株式会社</span>
+      </a>
+
+      <a class="sponsor" href="#" target="_blank" rel="noopener">
+        <div class="sponsor__logo">
+          <img src="/assets/gallery/sponsors/gakken.png" alt="株式会社学研ホールディングス">
+        </div>
+        <span class="sponsor__name">株式会社学研ホールディングス</span>
+      </a>
+
+      <a class="sponsor" href="#" target="_blank" rel="noopener">
+        <div class="sponsor__logo">
+          <img src="/assets/gallery/sponsors/contribute.jpg" alt="株式会社コントリビュート">
+        </div>
+        <span class="sponsor__name">株式会社コントリビュート</span>
+      </a>
+    </div>
+  </div>
+</section>

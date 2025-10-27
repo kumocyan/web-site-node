@@ -5,298 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= title %></title>
   <meta name="description" content="<%= locals.description ? description : 'N-STYLEは石狩市で創業20年、地域のお客様に寄り添った中古車販売サービスを提供しています。' %>">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/css/style.css">
-  <style>
-    :root {
-      /* N-STYLEオリジナルカラースキーム */
-      --nstyle-primary: #2c3e50;
-      --nstyle-secondary: #3498db;
-      --nstyle-accent: #e74c3c;
-      --nstyle-success: #27ae60;
-      --nstyle-warning: #f39c12;
-      --nstyle-light: #ecf0f1;
-      --nstyle-dark: #34495e;
-      --nstyle-text: #2c3e50;
-      --nstyle-text-muted: #7f8c8d;
-
-      /* グラデーション */
-      --primary-gradient: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
-      --secondary-gradient: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-      --accent-gradient: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-
-      /* 影と効果 */
-      --shadow-light: 0 2px 4px rgba(0,0,0,0.1);
-      --shadow-medium: 0 4px 8px rgba(0,0,0,0.15);
-      --shadow-heavy: 0 8px 16px rgba(0,0,0,0.2);
-      --border-radius: 8px;
-      --border-radius-sm: 4px;
-      --border-radius-lg: 12px;
-    }
-
-    body {
-      font-family: 'Noto Sans JP', sans-serif;
-      background-color: #f5f5f5;
-      color: var(--nstyle-text);
-      line-height: 1.6;
-      padding-top: 70px; /* navbarの高さ分 */
-    }
-
-    .navbar {
-      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
-      border-bottom: 3px solid var(--nstyle-accent);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .navbar-brand {
-      font-weight: 700;
-      color: white !important;
-      font-size: 1.5rem;
-    }
-
-    .navbar-brand:hover {
-      color: var(--nstyle-secondary) !important;
-    }
-
-    .nav-link {
-      color: rgba(255, 255, 255, 0.9) !important;
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-
-    .nav-link:hover {
-      color: white !important;
-      background-color: rgba(255, 255, 255, 0.1);
-      transform: translateY(-1px);
-    }
-
-    .catchphrase {
-      font-size: 2.2rem;
-      font-weight: bold;
-      color: var(--nstyle-primary);
-      margin: 2rem 0;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
-
-    .hero-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 4rem 0;
-    }
-
-    .hero-section .display-4 {
-      font-weight: 300;
-      margin-bottom: 1rem;
-    }
-
-    .btn-primary {
-      background: var(--primary-gradient);
-      border: none;
-      padding: 0.75rem 2rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: var(--shadow-medium);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-heavy);
-      background: linear-gradient(135deg, #2980b9 0%, #1e3c72 100%);
-    }
-
-    .card {
-      border: none;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-light);
-      transition: all 0.3s ease;
-      background: white;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-medium);
-    }
-
-    .text-primary {
-      color: var(--nstyle-secondary) !important;
-    }
-
-    /* アニメーション効果 */
-    .animate-fade-in {
-      animation: fadeIn 0.8s ease-out;
-    }
-
-    .animate-slide-up {
-      animation: slideUp 0.6s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(50px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* オリジナル要素 */
-    .nstyle-badge {
-      background: var(--accent-gradient);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    /* お問い合わせページ用スタイル */
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: 300;
-      color: var(--nstyle-primary);
-      margin-bottom: 2rem;
-      position: relative;
-    }
-
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 3px;
-      background: var(--primary-gradient);
-      border-radius: 2px;
-    }
-
-    .modern-card {
-      background: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow-medium);
-      border: 1px solid rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
-    }
-
-    .modern-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-heavy);
-    }
-
-    .gradient-btn {
-      background: var(--primary-gradient);
-      color: white;
-      border: none;
-      padding: 0.75rem 2rem;
-      border-radius: var(--border-radius);
-      font-weight: 600;
-      text-decoration: none;
-      display: inline-block;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .gradient-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-medium);
-      color: white;
-      text-decoration: none;
-    }
-
-    .hero-pattern {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-      opacity: 0.3;
-    }
-
-    /* タイムラインスタイル */
-    .timeline {
-      position: relative;
-      padding-left: 30px;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 15px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--nstyle-primary), var(--nstyle-secondary));
-    }
-
-    .timeline-item {
-      position: relative;
-      margin-bottom: 2rem;
-    }
-
-    .timeline-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .timeline-marker {
-      position: absolute;
-      left: -22px;
-      top: 24px;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 3px solid white;
-      box-shadow: 0 0 0 2px var(--nstyle-light);
-    }
-  </style>
 </head>
-<body>
-  <!-- ナビゲーションバー -->
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="/">
-        <i class="fas fa-car me-2"></i>N-STYLE
-      </a>
-      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="/"><i class="fas fa-home me-1"></i>TOP</a></li>
-          <li class="nav-item"><a class="nav-link" href="/inventory"><i class="fas fa-car me-1"></i>在庫情報</a></li>
-          <li class="nav-item"><a class="nav-link" href="/about"><i class="fas fa-building me-1"></i>会社概要</a></li>
-          <li class="nav-item"><a class="nav-link" href="/contact"><i class="fas fa-envelope me-1"></i>お問い合わせ</a></li>
-          <li class="nav-item"><a class="nav-link" href="/access"><i class="fas fa-map-marker-alt me-1"></i>アクセス</a></li>
-        </ul>
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link gradient-btn text-white px-3" href="/admin">
-              <i class="fas fa-cog me-1"></i>管理
-            </a>
-          </li>
-        </ul>
+<body class="site-body">
+  <div class="site-shell">
+    <header class="global-header" id="globalHeader">
+      <div class="global-header__inner">
+        <a class="global-header__brand" href="/">
+          <span class="global-header__logo">N-STYLE</span>
+          <span class="global-header__tag">Night Drive Edition</span>
+        </a>
+        <nav class="global-nav" id="globalNav" aria-label="メインメニュー">
+          <ul class="global-nav__list">
+            <li class="global-nav__item"><a class="global-nav__link" href="/">トップ</a></li>
+            <li class="global-nav__item"><a class="global-nav__link" href="/inventory">在庫情報</a></li>
+            <li class="global-nav__item"><a class="global-nav__link" href="/about">会社概要</a></li>
+            <li class="global-nav__item"><a class="global-nav__link" href="/contact">お問い合わせ</a></li>
+            <li class="global-nav__item"><a class="global-nav__link" href="/access">アクセス</a></li>
+          </ul>
+          <div class="global-nav__cta">
+            <a class="button button--outline" href="/admin"><i class="fas fa-lock me-2"></i>管理画面</a>
+          </div>
+        </nav>
+        <button class="global-header__toggle" id="globalNavToggle" aria-expanded="false" aria-controls="globalNav">
+          <span class="global-header__toggle-line"></span>
+          <span class="global-header__toggle-line"></span>
+          <span class="global-header__toggle-line"></span>
+          <span class="visually-hidden">メニュー</span>
+        </button>
       </div>
-    </div>
-  </nav>
+      <div class="global-header__overlay" id="globalNavOverlay" role="presentation"></div>
+    </header>
 
-  <main>
-    <%- body %>
-  </main>
+    <main class="site-main" id="mainContent">
+      <%- body %>
+    </main>
 
-  <!-- フッター -->
-  <footer class="bg-dark text-white py-4 mt-auto">
-    <div class="container text-center">
-      <p class="mb-0">&copy; 2025 N-STYLE. All rights reserved.</p>
-      <p class="mb-0">石狩市で創業20年、地域のお客様に寄り添ったサービスを提供しています。</p>
-    </div>
-  </footer>
+    <footer class="global-footer">
+      <div class="global-footer__inner">
+        <div class="global-footer__brand">
+          <span class="global-footer__logo">N-STYLE</span>
+          <p class="global-footer__copy">石狩市で創業20年、地域密着の中古車販売とメンテナンスを提供しています。</p>
+        </div>
+        <div class="global-footer__links">
+          <a href="/inventory">在庫情報</a>
+          <a href="/about">会社概要</a>
+          <a href="/contact">お問い合わせ</a>
+          <a href="/access">アクセス</a>
+        </div>
+        <p class="global-footer__legal">&copy; <%= new Date().getFullYear() %> N-STYLE. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/js/script.js"></script>
 </body>
 </html>
