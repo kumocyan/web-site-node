@@ -1,85 +1,50 @@
-###############################
-# Logs and diagnostics
-###############################
-# アプリや各種ツールが出力するログファイル全般
-logs
-*.log
-# npm関連のデバッグログ
-npm-debug.log*
-# Yarn関連のデバッグログ
-yarn-debug.log*
-# Yarnのエラーログ
-yarn-error.log*
-# pnpm関連のデバッグログ
-pnpm-debug.log*
-# Lernaのデバッグログ
-lerna-debug.log*
-# Jestなどが生成するレポートファイル
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+# Dependencies
+node_modules/
 
-###############################
-# Runtime data
-###############################
-# 実行時に生成される一時PIDやシードファイル
-pids
+# Environment variables
+.env
+.env.*
+*.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Runtime data / PIDs
+pids/
 *.pid
 *.seed
-*.pid.lock
 
-###############################
-# Dependency directories
-###############################
-# npmでインストールされる依存ディレクトリ
-node_modules/
-# jspmでインストールされる依存ディレクトリ
-jspm_packages/
-
-###############################
-# Build and cache output
-###############################
-# ビルド成果物やキャッシュの出力先
-dist/
-build/
-.cache/
-.parcel-cache/
-.vite/
-.next/
-out/
-.nuxt/
-.svelte-kit/
-.serverless/
-dynamodb/
-
-###############################
-# Testing and coverage
-###############################
-# テスト結果やカバレッジの出力
+# Coverage / test output
 coverage/
 .nyc_output/
 
-###############################
-# Environment and config overrides
-###############################
-# ローカル環境の設定ファイル
-.env
-.env.*
-.npmrc
-.yarnrc
+# Build outputs
+build/
+dist/
+tmp/
+temp/
 
-###############################
-# Tooling metadata
-###############################
-# Lintやエディタのキャッシュ／設定
-.eslintcache
-.stylelintcache
-.tsbuildinfo
-.DS_Store
-Thumbs.db
+# Editors / OS
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
 
-###############################
-# Local data files
-###############################
-# SQLiteのローカルデータベース
-database.sqlite
+# SQLite databases
+*.sqlite
+*.sqlite-journal
+*.db
+
+# Misc
+.cache/
+.eslintcache
+
+# Framework/platform
+.next/
+.vercel/
+.svelte-kit/
