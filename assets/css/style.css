@@ -404,6 +404,15 @@ a:hover { text-decoration: none; }
   gap: clamp(1.5rem, 4vw, 2.5rem);
 }
 
+@media (max-width: 1024px) {
+  .sponsor-grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .sponsor-grid { grid-template-columns: 1fr; }
+  .sponsor__logo { width: min(180px, 100%); }
+}
+
 .sponsor {
   display: flex;
   flex-direction: column;
