@@ -501,6 +501,7 @@ a:hover { text-decoration: none; }
 .story-list__body { font-size: 1rem; color: var(--color-ink-200); }
 
 .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: clamp(1.5rem, 3vw, 2.5rem); margin-top: clamp(2rem, 4vw, 3rem); }
+.feature-grid--stack { grid-template-columns: 1fr; }
 .feature-card { background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(120, 150, 200, 0.2); border-radius: var(--radius-md); padding: 2rem; box-shadow: var(--shadow-sm); display: grid; gap: 1rem; }
 .feature-card__icon { width: 52px; height: 52px; border-radius: 15px; background: linear-gradient(135deg, rgba(86, 104, 255, 0.2), rgba(255, 92, 141, 0.18)); display: grid; place-items: center; color: var(--brand-primary); font-size: 1.4rem; }
 .feature-card__title { font-size: 1.35rem; font-weight: 600; }

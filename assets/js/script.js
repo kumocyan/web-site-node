@@ -110,18 +110,50 @@ document.addEventListener('DOMContentLoaded', () => {
    * Announcements lazy load
    * ------------------------------------------------------------ */
   const loadMoreBtn = document.getElementById('load-more-btn');
+  const collapseBtn = document.getElementById('collapse-btn');
   const timeline = document.getElementById('announcements-timeline');
   const loadMoreContainer = document.getElementById('load-more-container');
 
   if (loadMoreBtn && timeline && loadMoreContainer) {
-    let offset = 3;
-    const limit = 3;
+    let offset = 3; // 初期表示はサーバー側で3件
+    const pageSize = 3;
+    const maxItems = 6;
+
+    // 初期状態のボタン可視性
+    const initialCount = timeline.children.length;
+    if (initialCount >= maxItems) {
+      loadMoreBtn.style.display = 'none';
+      collapseBtn && (collapseBtn.style.display = 'inline-flex');
+    }
+
+    const updateButtons = () => {
+      const count = timeline.children.length;
+      if (count >= maxItems) {
+        loadMoreBtn.style.display = 'none';
+        if (collapseBtn) collapseBtn.style.display = 'inline-flex';
+      } else if (count <= 3) {
+        if (collapseBtn) collapseBtn.style.display = 'none';
+        loadMoreBtn.style.display = 'inline-flex';
+      } else {
+        loadMoreBtn.style.display = 'inline-flex';
+        if (collapseBtn) collapseBtn.style.display = 'inline-flex';
+      }
+    };
 
     loadMoreBtn.addEventListener('click', async () => {
+      const currentlyShown = timeline.children.length;
+      if (currentlyShown >= maxItems) {
+        updateButtons();
+        return;
+      }
+
       loadMoreBtn.disabled = true;
       loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>読み込み中...';
 
       try {
+        // 通常は3件ずつ取得。最大6件を超えないように制御
+        const remaining = maxItems - currentlyShown;
+        const limit = Math.min(pageSize, remaining);
         const response = await fetch(`/api/announcements?offset=${offset}&limit=${limit}`);
         if (!response.ok) throw new Error(`Status ${response.status}`);
 
@@ -144,17 +176,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         offset += items.length;
-        if (items.length < limit) {
-          loadMoreContainer.innerHTML = '<p class="text-muted mt-3">すべてのお知らせを表示しました。</p>';
-        } else {
-          loadMoreBtn.disabled = false;
-          loadMoreBtn.innerHTML = '<i class="fas fa-history me-2"></i>過去のお知らせを見る';
-        }
+        loadMoreBtn.disabled = false;
+        loadMoreBtn.innerHTML = '<i class="fas fa-history me-2"></i>過去のお知らせを見る';
+        updateButtons();
       } catch (error) {
         console.error('Failed to load announcements:', error);
         loadMoreContainer.innerHTML = '<p class="text-danger mt-3">読み込みに失敗しました。時間をおいて再度お試しください。</p>';
       }
     });
+
+    if (collapseBtn) {
+      collapseBtn.addEventListener('click', () => {
+        // 先頭3件を残し、それ以降を削除
+        while (timeline.children.length > 3) {
+          timeline.removeChild(timeline.lastElementChild);
+        }
+        // オフセットを初期値に戻す（次回の読み込みを3件目以降からにする）
+        offset = 3;
+        updateButtons();
+      });
+    }
   }
 });
   
